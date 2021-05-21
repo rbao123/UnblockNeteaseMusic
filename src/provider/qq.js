@@ -30,18 +30,18 @@ const search = info => {
 	const url =
 		'https://c.y.qq.com/soso/fcgi-bin/client_search_cp?' +
 		'ct=24&qqmusic_ver=1298&new_json=1&remoteplace=txt.yqq.center&' +
-		'searchid=46804741196796149&t=0&aggr=1&cr=1&catZhida=1&lossless=0&' +
-		'flag_qc=0&p=1&n=20&w=' + encodeURIComponent(info.keyword) + '&' +
+		't=0&aggr=1&cr=1&catZhida=1&lossless=0&flag_qc=0&p=1&n=20&w=' +
+		encodeURIComponent(info.keyword) + '&' +
 		'g_tk=5381&jsonpCallback=MusicJsonCallback10005317669353331&loginUin=0&hostUin=0&' +
 		'format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0'
 
 	return request('GET', url)
-	.then(response => response.jsonp())
-	.then(jsonBody => {
-		const list = jsonBody.data.song.list.map(format)
-		const matched = select(list, info)
-		return matched ? matched.id : Promise.reject()
-	})
+		.then(response => response.jsonp())
+		.then(jsonBody => {
+			const list = jsonBody.data.song.list.map(format)
+			const matched = select(list, info)
+			return matched ? matched.id : Promise.reject()
+		})
 }
 
 const single = (id, format) => {
@@ -97,25 +97,25 @@ const single = (id, format) => {
 		}))
 
 	return request('GET', url, headers)
-	.then(response => response.json())
-	.then(jsonBody => {
-		const { sip, midurlinfo } = jsonBody.req_0.data
-		// const vkey =
-		// 	jsonBody.req_0.data.midurlinfo[0].vkey ||
-		// 	(jsonBody.req_0.data.testfile2g.match(/vkey=(\w+)/) || [])[1]
-		// return concatenate(vkey)
-		return midurlinfo[0].purl ? sip[0] + midurlinfo[0].purl : Promise.reject()
-	})
+		.then(response => response.json())
+		.then(jsonBody => {
+			const { sip, midurlinfo } = jsonBody.req_0.data
+			// const vkey =
+			// 	jsonBody.req_0.data.midurlinfo[0].vkey ||
+			// 	(jsonBody.req_0.data.testfile2g.match(/vkey=(\w+)/) || [])[1]
+			// return concatenate(vkey)
+			return midurlinfo[0].purl ? sip[0] + midurlinfo[0].purl : Promise.reject()
+		})
 }
 
 const track = id => {
 	id.key = id.file
 	return Promise.all(
 		[['F000', '.flac'], ['M800', '.mp3'], ['M500', '.mp3']].slice((headers.cookie || typeof(window) !== 'undefined') ? (select.ENABLE_FLAC ? 0 : 1) : 2)
-		.map(format => single(id, format).catch(() => null))
+			.map(format => single(id, format).catch(() => null))
 	)
-	.then(result => result.find(url => url) || Promise.reject())
-	.catch(() => insure().qq.track(id))
+		.then(result => result.find(url => url) || Promise.reject())
+		.catch(() => insure().qq.track(id))
 
 	// return request(
 	// 	'POST', 'http://acc.music.qq.com/base/fcgi-bin/fcg_music_express_mobile2.fcg', {},
