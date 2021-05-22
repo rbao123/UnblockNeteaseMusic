@@ -45,9 +45,12 @@ const check = url => {
 	return Promise.race([request('GET', url, header), new Promise((_, reject) => setTimeout(() => reject(504), 5 * 1000))])
 		.then(response => {
 			if (!response.statusCode.toString().startsWith('2')) return Promise.reject()
-			if (url.includes('qq.com'))
+			if (url.includes('126.net'))
+				// song.md5 = response.headers['x-nos-meta-origin-md5'] || response.headers['etag'].replace(/"/g, '')
+				song.md5 = url.split('/').slice(-1)[0].replace(/\..*/g,'')
+			else if (url.includes('qq.com'))
 				song.md5 = response.headers['server-md5']
-			else if (url.includes('xiami.net') || url.includes('qianqian.com'))
+			else if (url.includes('qianqian.com'))
 				song.md5 = response.headers['etag'].replace(/"/g, '').toLowerCase()
 			song.size = parseInt((response.headers['content-range'] || '').split('/').pop() || response.headers['content-length']) || 0
 			song.url = response.url.href

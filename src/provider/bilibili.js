@@ -27,7 +27,6 @@ const search = info => {
 }
 
 const track = id => {
-    // weburl
     const url =
         'https://www.bilibili.com/audio/music-service-c/web/url?rivilege=2&quality=2&' +
         'sid=' + id
@@ -36,7 +35,7 @@ const track = id => {
         .then(response => response.json())
         .then(jsonBody => {
             if (jsonBody.code === 0) {
-                // bb music require referer, connect do not support referer, so change to http
+                // bilibili music requires referer, connect do not support referer, so change to http
                 return jsonBody.data.cdns[0].replace("https","http")
             } else {
                 return Promise.reject()
