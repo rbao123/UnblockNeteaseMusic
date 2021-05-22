@@ -4,7 +4,6 @@ const request = require('../request')
 const provider = {
 	netease: require('./netease'),
 	qq: require('./qq'),
-	xiami: require('./xiami'),
 	baidu: require('./baidu'),
 	kugou: require('./kugou'),
 	kuwo: require('./kuwo'),
